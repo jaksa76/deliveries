@@ -1,0 +1,7 @@
+<persistence xmlns="http://java.sun.com/xml/ns/persistence">
+    <persistence-unit name="test">
+        <class>com.zuhlke.deliveries.Car</class>
+
+        <properties></properties>
+    </persistence-unit>
+</persistence>

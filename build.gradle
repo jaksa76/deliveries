@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+}
+
+group 'com.zuhlke'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://m2.objectdb.com"
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+dependencies {
+    compile "com.objectdb:objectdb:2.6.5"
+    compile "com.googlecode.libphonenumber:libphonenumber:8.12.1"
+    testCompile group: 'org.assertj', name: 'assertj-core', version: '3.15.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
+}
