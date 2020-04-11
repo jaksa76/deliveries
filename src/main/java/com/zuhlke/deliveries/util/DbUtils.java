@@ -1,4 +1,4 @@
-package com.zuhlke.deliveries;
+package com.zuhlke.deliveries.util;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -8,10 +8,10 @@ import java.util.function.Function;
 
 public class DbUtils {
     public static void execute(EntityManagerFactory emf, Consumer<EntityManager> c) {
-        execute(emf, toFunction(c));
+        retrieve(emf, toFunction(c));
     }
 
-    public static <T> T execute(EntityManagerFactory emf, Function<EntityManager, T> f) {
+    public static <T> T retrieve(EntityManagerFactory emf, Function<EntityManager, T> f) {
         EntityManager em = emf.createEntityManager();
         try {
             return f.apply(em);
@@ -21,11 +21,11 @@ public class DbUtils {
     }
 
     public static void executeInTx(EntityManagerFactory emf, Consumer<EntityManager> c) {
-        executeInTx(emf, toFunction(c));
+        retrieveInTx(emf, toFunction(c));
     }
 
-    public static <T> T executeInTx(EntityManagerFactory emf, Function<EntityManager, T> f) {
-        return execute(emf, em -> {
+    public static <T> T retrieveInTx(EntityManagerFactory emf, Function<EntityManager, T> f) {
+        return retrieve(emf, em -> {
             EntityTransaction tx = em.getTransaction();
             try {
                 tx.begin();

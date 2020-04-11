@@ -1,4 +1,4 @@
-package com.zuhlke.deliveries;
+package com.zuhlke.deliveries.users;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

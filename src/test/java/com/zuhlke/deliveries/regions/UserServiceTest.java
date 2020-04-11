@@ -1,5 +1,7 @@
-package com.zuhlke.deliveries;
+package com.zuhlke.deliveries.regions;
 
+import com.zuhlke.deliveries.users.User;
+import com.zuhlke.deliveries.users.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,14 +1,15 @@
-package com.zuhlke.deliveries;
+package com.zuhlke.deliveries.regions;
 
-import com.objectdb.Enhancer;
+import com.zuhlke.deliveries.util.DbUtils;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class RegionService {
-    EntityManagerFactory emf = Persistence.createEntityManagerFactory("objectdb:$objectdb/db/regions.odb");
+    EntityManagerFactory emf = Persistence.createEntityManagerFactory("objectdb:db/regions.odb");
 
     public RegionService() {
         DbUtils.executeInTx(emf, em -> {
@@ -25,7 +26,7 @@ public class RegionService {
     }
 
     public Long createRootRegion(String name) {
-        return DbUtils.execute(emf, em -> {
+        return DbUtils.retrieve(emf, em -> {
             Long count = em.createQuery("select count(r) from Region r where r.name = :name and r.parentRegion is null", Long.class)
                     .setParameter("name", name)
                     .getSingleResult();
@@ -36,7 +37,7 @@ public class RegionService {
     }
 
     public Long createRegion(Long parentRegion, String name) {
-        return DbUtils.execute(emf, em -> {
+        return DbUtils.retrieve(emf, em -> {
             Long count = em.createQuery("select count(r) from Region r where r.name = :name and r.parentRegion = :parent", Long.class)
                     .setParameter("name", name)
                     .setParameter("parent", parentRegion)
@@ -48,14 +49,14 @@ public class RegionService {
     }
 
     public List<Region> getRootRegions() {
-        return DbUtils.execute(emf, em -> {
+        return DbUtils.retrieve(emf, em -> {
             return em.createQuery("select r from Region r where r.parentRegion is null", Region.class).getResultList();
         });
     }
 
     public List<Region> getRegionsOf(Long parentRegionId) {
         if (parentRegionId == null) throw new IllegalArgumentException("selected region is null");
-        return DbUtils.execute(emf, em -> {
+        return DbUtils.retrieve(emf, em -> {
             return em.createQuery("select r from Region r where r.parentRegion = :parent", Region.class)
                     .setParameter("parent", parentRegionId)
                     .getResultList();
@@ -63,7 +64,7 @@ public class RegionService {
     }
 
     public List<Region> getAllRegions() {
-        return DbUtils.execute(emf, em -> {
+        return DbUtils.retrieve(emf, em -> {
             return em.createQuery("select r from Region r", Region.class).getResultList();
         });
     }
@@ -82,8 +83,24 @@ public class RegionService {
         });
     }
 
+    public List<Long> getAllCouriersIn(Long regionId) {
+        List<Long> couriers = new ArrayList<>();
+        while (regionId != null) {
+            couriers.addAll(getCouriersIn(regionId));
+            regionId = getParentRegion(regionId);
+        }
+        return couriers;
+    }
+
+    private Long getParentRegion(Long regionId) {
+        return DbUtils.retrieve(emf, em -> em.createQuery("select r from Region r where r.id = :id", Region.class)
+                .setParameter("id", regionId)
+                .getSingleResult()
+                .parentRegion);
+    }
+
     public List<Long> getCouriersIn(Long regionId) {
-        return DbUtils.execute(emf, em -> {
+        return DbUtils.retrieve(emf, em -> {
             return em.createQuery("select rc from RegionCourier rc where rc.regionId = :regionId", RegionCourier.class)
                     .setParameter("regionId", regionId)
                     .getResultList().stream().map(rc -> rc.courierId).collect(Collectors.toList());

@@ -23,9 +23,6 @@ public class ObjectDBTest {
             car.color = "Gray";
             em.persist(car);
             tx.commit();
-            System.out.println("id:" + car.id);
-
-            System.out.println("count: " + em.createQuery("select count(c) from Car c").getSingleResult());
         } finally {
             em.close();
             emf.close();

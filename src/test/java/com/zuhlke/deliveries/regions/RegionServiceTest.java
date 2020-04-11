@@ -1,10 +1,8 @@
-package com.zuhlke.deliveries;
+package com.zuhlke.deliveries.regions;
 
-import org.assertj.core.api.Assertions;
+import com.zuhlke.deliveries.regions.RegionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,8 +24,6 @@ class RegionServiceTest {
 
         regionService.createRegion(bar, "Topolica");
         regionService.createRegion(bar, "Polje");
-
-        System.out.println(regionService.getAllRegions());
 
         assertThat(regionService.getRootRegions()).extracting("name").containsExactly("Crna Gora");
         assertThat(regionService.getRegionsOf(crnaGora)).extracting("name").containsExactly("Andrijevica", "Bar", "Budva");
@@ -68,5 +64,19 @@ class RegionServiceTest {
 
         assertThat(regionService.getCouriersIn(bar)).containsExactly(1L, 2L);
         assertThat(regionService.getCouriersIn(budva)).containsExactly(3L);
+    }
+
+    @Test
+    void addingCouriersToParentRegion() {
+        Long crnaGora = regionService.createRootRegion("Crna Gora");
+        Long bar = regionService.createRegion(crnaGora, "Bar");
+        Long budva = regionService.createRegion(crnaGora, "Budva");
+        regionService.assignRegion(1L, bar);
+        regionService.assignRegion(2L, bar);
+        regionService.assignRegion(3L, budva);
+        regionService.assignRegion(4L, crnaGora);
+
+        assertThat(regionService.getAllCouriersIn(bar)).containsExactly(1L, 2L, 4L);
+        assertThat(regionService.getAllCouriersIn(budva)).containsExactly(3L, 4L);
     }
 }

@@ -1,4 +1,4 @@
-package com.zuhlke.deliveries;
+package com.zuhlke.deliveries.couriers;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,9 +7,9 @@ import javax.persistence.Id;
 @Entity
 public class Courier {
     @Id @GeneratedValue Long id;
-    Long userId;
-    String description;
-    Boolean active;
+    public Long userId;
+    public String description;
+    public Boolean active;
 
     public Courier() {
     }

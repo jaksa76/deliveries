@@ -1,11 +1,13 @@
-package com.zuhlke.deliveries;
+package com.zuhlke.deliveries.couriers;
+
+import com.zuhlke.deliveries.util.DbUtils;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.util.List;
 
 public class CouriersService {
-    EntityManagerFactory emf = Persistence.createEntityManagerFactory("objectdb:$objectdb/db/couriers.odb");
+    EntityManagerFactory emf = Persistence.createEntityManagerFactory("objectdb:db/couriers.odb");
 
     public CouriersService() {
         DbUtils.executeInTx(emf, em -> {
@@ -17,7 +19,7 @@ public class CouriersService {
     }
 
     public Long registerAsCourier(Long userId, String description) {
-        return DbUtils.execute(emf, em -> {
+        return DbUtils.retrieve(emf, em -> {
             Long count = em.createQuery("select count(c) from Courier c where c.userId = :userId", Long.class)
                     .setParameter("userId", userId)
                     .getSingleResult();
@@ -28,7 +30,7 @@ public class CouriersService {
     }
 
     public List<Courier> getCouriers(List<Long> ids) {
-        return DbUtils.execute(emf, em -> {
+        return DbUtils.retrieve(emf, em -> {
             return em.createQuery("select c from Courier c where c.id in :ids", Courier.class).setParameter("ids", ids).getResultList();
         });
     }

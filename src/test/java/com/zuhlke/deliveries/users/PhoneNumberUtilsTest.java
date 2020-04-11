@@ -1,4 +1,4 @@
-package com.zuhlke.deliveries;
+package com.zuhlke.deliveries.users;
 
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;

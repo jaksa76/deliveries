@@ -1,5 +1,7 @@
-package com.zuhlke.deliveries;
+package com.zuhlke.deliveries.couriers;
 
+import com.zuhlke.deliveries.couriers.Courier;
+import com.zuhlke.deliveries.couriers.CouriersService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

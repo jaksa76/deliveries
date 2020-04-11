@@ -1,4 +1,4 @@
-package com.zuhlke.deliveries;
+package com.zuhlke.deliveries.regions;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,8 +9,8 @@ import javax.persistence.Id;
  */
 @Entity public class Region {
     @Id @GeneratedValue Long id;
-    Long parentRegion;
-    String name;
+    public Long parentRegion;
+    public String name;
 
     public Region() { }
 
